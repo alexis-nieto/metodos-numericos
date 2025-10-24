@@ -1,5 +1,18 @@
 {
-  "help_description": "Calculadora de Ecuaciones no lineales",
-  "farewell": "Goodbye!",
-  "welcome_message": "Welcome to my application."
+  "message_help_description": "Calculadora de Ecuaciones no lineales",
+
+  "message_version": "\nProgram Version: v1.0.0, \nAuthor: BSc. Arturo Nieto, \nLicense: GNU General Public License v3.0. \n\nThis program is distributed under the terms of the GNU GPL v3.0. \nYou can redistribute it and/or modify it under the terms of the license. \nFor more details, visit: https://www.gnu.org/licenses/gpl-3.0.html\n",
+
+  "args_option_version_short": "-v",
+  "args_option_version_long": "--version",
+  "args_option_version_info": "Imprimir versión del programa é info",
+
+  "args_option_method_short": "-m",
+  "args_option_method_long": "--metodo",
+  "args_option_method_info": "Seleccionar el método: 'biseccion' = Metodo de Biseccion, 'pfalsa'= Metodo de la Posicion Falsa",
+
+  "args_option_function_short": "-f",
+  "args_option_function_long": "--funcion",
+  "args_option_function_info": "La funcion matemática"
+
 }
