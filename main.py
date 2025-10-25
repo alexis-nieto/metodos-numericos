@@ -138,7 +138,7 @@ def print_table(iterations):
         print(row)
 #'''
 
-def print_table(iterations):
+def print_table(iterations, significant_figures):
     from tabulate import tabulate
     
     data = [[
@@ -155,7 +155,7 @@ def print_table(iterations):
     headers = ['Iter', 'xl', 'f(xl)', 'xr', 'f(xr)', 'xi', 'f(xi)', 'e']
     
     # Different table styles: 'grid', 'fancy_grid', 'pipe', 'orgtbl', 'github', 'pretty'
-    print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='.6f'))
+    print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
 
 ##################################################
 
@@ -209,11 +209,16 @@ def main():
 
     while True:
 
+        f_xl = expr.subs(x, xl) # Calculate f(Xl)
+        f_xr = expr.subs(x, xr) # Calculate f(Xr)
+
         # Calculate Xi
         if method == "biseccion":
             xi = (xl + xr) / 2.0
         elif method == "pfalsa":
-            xi = ((xl)(f_xr)-(xr)(f_xl)) / ((f_xr)-(f_xl))
+            xi = ((xl)*(f_xr)-(xr)*(f_xl)) / ((f_xr)-(f_xl))
+
+        f_xi = expr.subs(x, xi) # Calculate f(Xi)
 
         # Calculate E
         if current_iteration > 0:
@@ -224,12 +229,6 @@ def main():
             print("Error Calc: ", e,"%")
             print("-----")
             #'''
-
-        f_xl = expr.subs(x, xl) # Calculate f(Xl)
-        f_xr = expr.subs(x, xr) # Calculate f(Xr)
-        f_xi = expr.subs(x, xi) # Calculate f(Xi)
-
-        f_xl_f_xi = f_xl * f_xi
 
         # Append current iteration to list
         iterations_list.append(
@@ -249,7 +248,10 @@ def main():
             if e <= target_e:
                 break
 
-        # Evaluaciones Paso 3a
+        # Evaluaciones Paso 3
+
+        f_xl_f_xi = f_xl * f_xi
+
         if f_xl_f_xi < 0:
             xr = xi
         elif f_xl_f_xi > 0:
@@ -262,7 +264,7 @@ def main():
     
     #print_ascii_all_iterations(iterations_list)
 
-    print_table(iterations_list)
+    print_table(iterations_list, significant_figures)
 
 if __name__ == "__main__":
     main()
