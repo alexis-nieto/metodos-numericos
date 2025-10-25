@@ -8,8 +8,6 @@ import sys
 import json
 import textwrap
 import sympy as sp
-import pandas
-
 
 ##################################################
 
@@ -140,21 +138,24 @@ def print_table(iterations):
         print(row)
 #'''
 
-
 def print_table(iterations):
-    data = [{
-        'iter': it.iter,
-        'xl': it.xl,
-        'f(xl)': it.f_xl,
-        'xr': it.xr,
-        'f(xr)': it.f_xr,
-        'xi': it.xi,
-        'f(xi)': it.f_xi,
-        'e': it.e
-    } for it in iterations]
+    from tabulate import tabulate
     
-    df = pandas.DataFrame(data)
-    print(df.to_string(index=False))
+    data = [[
+        it.iter,
+        it.xl,
+        it.f_xl,
+        it.xr,
+        it.f_xr,
+        it.xi,
+        it.f_xi,
+        it.e
+    ] for it in iterations]
+    
+    headers = ['Iter', 'xl', 'f(xl)', 'xr', 'f(xr)', 'xi', 'f(xi)', 'e']
+    
+    # Different table styles: 'grid', 'fancy_grid', 'pipe', 'orgtbl', 'github', 'pretty'
+    print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='.6f'))
 
 ##################################################
 
