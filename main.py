@@ -8,6 +8,7 @@ import sys
 import json
 import textwrap
 import sympy as sp
+import pandas
 
 
 ##################################################
@@ -125,6 +126,8 @@ def print_ascii_all_iterations(iterations_list):
     for iteration in range(0, len(iterations_list)):
         print_ascii_iteration(iterations_list, iteration)
 
+'''
+@Deprecated
 def print_table(iterations):
     # Print header
     header = f"{'Iter':<6} {'xl':<12} {'f(xl)':<12} {'xr':<12} {'f(xr)':<12} {'xi':<12} {'f(xi)':<12} {'e':<12}"
@@ -135,6 +138,23 @@ def print_table(iterations):
     for iteration in iterations:
         row = f"{iteration.iter:<6} {iteration.xl:<12.6f} {iteration.f_xl:<12.6f} {iteration.xr:<12.6f} {iteration.f_xr:<12.6f} {iteration.xi:<12.6f} {iteration.f_xi:<12.6f} {iteration.e:<12.6f}"
         print(row)
+#'''
+
+
+def print_table(iterations):
+    data = [{
+        'iter': it.iter,
+        'xl': it.xl,
+        'f(xl)': it.f_xl,
+        'xr': it.xr,
+        'f(xr)': it.f_xr,
+        'xi': it.xi,
+        'f(xi)': it.f_xi,
+        'e': it.e
+    } for it in iterations]
+    
+    df = pandas.DataFrame(data)
+    print(df.to_string(index=False))
 
 ##################################################
 
@@ -242,12 +262,6 @@ def main():
     #print_ascii_all_iterations(iterations_list)
 
     print_table(iterations_list)
-
-
-
-
-
-
 
 if __name__ == "__main__":
     main()
