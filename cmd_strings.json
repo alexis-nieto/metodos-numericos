@@ -1,4 +1,5 @@
 {
+  "significant_figures": 8,
   "message_help_description": "Calculadora de Ecuaciones no lineales",
 
   "message_version": "\nProgram Version: v1.0.0, \nAuthor: BSc. Arturo Nieto, \nLicense: GNU General Public License v3.0. \n\nThis program is distributed under the terms of the GNU GPL v3.0. \nYou can redistribute it and/or modify it under the terms of the license. \nFor more details, visit: https://www.gnu.org/licenses/gpl-3.0.html\n",
@@ -13,6 +14,18 @@
 
   "args_option_function_short": "-f",
   "args_option_function_long": "--funcion",
-  "args_option_function_info": "La funcion matemática"
+  "args_option_function_info": "La función matemática; a**b: Exponenciación, E**x: e^x Euler, log(x, base): Logaritmo, sqrt(x): Raiz Cuadrada, cbrt(x): Raiz Cubica",
+
+  "args_option_xl_short": "-xl",
+  "args_option_xl_long": "--xl",
+  "args_option_xl_info": "Valor de Xl",
+
+  "args_option_xr_short": "-xr",
+  "args_option_xr_long": "--xr",
+  "args_option_xr_info": "Valor de Xr",
+
+  "args_option_e_short": "-e",
+  "args_option_e_long": "--e",
+  "args_option_e_info": "Valor de E en %%, ej. '3.45%%', '0.0005%%'"
 
 }
