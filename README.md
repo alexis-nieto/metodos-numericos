@@ -1,4 +1,14 @@
 
+# Dependencies
+
+To run the program, UV is needed:
+
+[Installation Process for Windows](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_2)
+
+[Installation Process for macOS and Linux](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1)
+
+The commands must be run on the folder itself where the repo was cloned to.
+
 # Example 1
 
 Command:

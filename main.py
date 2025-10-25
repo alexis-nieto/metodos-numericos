@@ -4,9 +4,9 @@ See the LICENSE file for details.
 """
 
 import argparse
-import sys
 import json
 import textwrap
+import sys
 import sympy as sp
 
 ##################################################
