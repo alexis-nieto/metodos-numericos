@@ -12,7 +12,7 @@ import sympy as sp
 ##################################################
 
 
-class Iteration:
+class IterationBiseccion:
     def __init__(self, **kwargs):
         self.iter = kwargs.get('iter', 0)
         self.xl = kwargs.get('xl', 0.0)
@@ -25,7 +25,6 @@ class Iteration:
 
 
 ##################################################
-
 
 def load_cmd_strings(filename='cmd_strings.json'):
     with open(filename, 'r') as f:
@@ -55,7 +54,7 @@ def initialize_arguments(cmd_strings):
     parser.add_argument(
         cmd_strings['args_option_method_short'],
         cmd_strings['args_option_method_long'],
-        choices=['biseccion', 'pfalsa'],
+        choices=['biseccion', 'pfalsa', 'psimple', 'newton'],
         help=textwrap.dedent(cmd_strings['args_option_method_info'])
     )
 
@@ -73,11 +72,18 @@ def initialize_arguments(cmd_strings):
         help=cmd_strings['args_option_xl_info']
     )
 
-            # Xr (-xr, --xr)
+        # Xr (-xr, --xr)
     parser.add_argument(
         cmd_strings['args_option_xr_short'],
         cmd_strings['args_option_xr_long'],
         help=cmd_strings['args_option_xr_info']
+    )
+
+        # Xi (-xi, --xi)
+    parser.add_argument(
+        cmd_strings['args_option_xi_short'],
+        cmd_strings['args_option_xi_long'],
+        help=cmd_strings['args_option_xi_info']
     )
 
         # E (-e, --error)
@@ -88,6 +94,8 @@ def initialize_arguments(cmd_strings):
     )
 
     return parser.parse_args()
+
+#########################
 
 def from_args_get_method(args):
     if args.metodo:
@@ -105,40 +113,17 @@ def from_args_get_xr(args):
     if args.xr:
         return args.xr
 
+def from_args_get_xi(args):
+    if args.xi:
+        return args.xi
+
 def from_args_get_e(args):
     if args.e:
         return args.e
 
-def print_ascii_iteration(iterations_list, iter):
-    print("\n")
-    print("Iteration: ", iterations_list[iter].iter)
-    print("Xl: ", iterations_list[iter].xl)
-    print("f(Xl): ", iterations_list[iter].f_xl)
-    print("Xr: ", iterations_list[iter].xr)
-    print("f(Xr): ", iterations_list[iter].f_xr)
-    print("Xi: ", iterations_list[iter].xi)
-    print("f(Xi): ", iterations_list[iter].f_xi)
-    print("E: ", iterations_list[iter].e, "%")
+#########################
 
-def print_ascii_all_iterations(iterations_list):
-    for iteration in range(0, len(iterations_list)):
-        print_ascii_iteration(iterations_list, iteration)
-
-'''
-@Deprecated
-def print_table(iterations):
-    # Print header
-    header = f"{'Iter':<6} {'xl':<12} {'f(xl)':<12} {'xr':<12} {'f(xr)':<12} {'xi':<12} {'f(xi)':<12} {'e':<12}"
-    print(header)
-    print("-" * len(header))
-    
-    # Print each iteration
-    for iteration in iterations:
-        row = f"{iteration.iter:<6} {iteration.xl:<12.6f} {iteration.f_xl:<12.6f} {iteration.xr:<12.6f} {iteration.f_xr:<12.6f} {iteration.xi:<12.6f} {iteration.f_xi:<12.6f} {iteration.e:<12.6f}"
-        print(row)
-#'''
-
-def print_table(iterations, significant_figures):
+def print_table_biseccion_and_pfalsa(iterations, significant_figures):
     from tabulate import tabulate
     
     data = [[
@@ -157,25 +142,29 @@ def print_table(iterations, significant_figures):
     # Different table styles: 'grid', 'fancy_grid', 'pipe', 'orgtbl', 'github', 'pretty'
     print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
 
+''' @Deprecated
+def print_ascii_iteration(iterations_list, iter):
+    print("\n")
+    print("Iteration: ", iterations_list[iter].iter)
+    print("Xl: ", iterations_list[iter].xl)
+    print("f(Xl): ", iterations_list[iter].f_xl)
+    print("Xr: ", iterations_list[iter].xr)
+    print("f(Xr): ", iterations_list[iter].f_xr)
+    print("Xi: ", iterations_list[iter].xi)
+    print("f(Xi): ", iterations_list[iter].f_xi)
+    print("E: ", iterations_list[iter].e, "%")
+'''
+
+''' @Deprecated
+def print_ascii_all_iterations(iterations_list):
+    for iteration in range(0, len(iterations_list)):
+        print_ascii_iteration(iterations_list, iteration)
+'''
+
 ##################################################
 
+def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
 
-def main():
-
-    # Load strings from JSON file
-    cmd_strings = load_cmd_strings()
-    args = initialize_arguments(cmd_strings)
-
-    #########################
-
-    # Print version if called and exit
-    if args.version:
-        print(cmd_strings['message_version'])
-        sys.exit(7)
-
-    #########################
-
-    method = ""
     function = ""
     target_e = 0.0
     xl = 0.0
@@ -186,7 +175,7 @@ def main():
     f_xi = 0.0
 
     # Get data from arguments
-    method = str(from_args_get_method(args))
+    
     function = str(from_args_get_function(args))
     target_e = float(from_args_get_e(args))
     xl = float(from_args_get_xl(args))
@@ -201,7 +190,7 @@ def main():
     #########################
 
     current_iteration = 0
-    iterations_list = [] # To store the 'Iteration' objects
+    iterations_list = [] # To store the 'IterationBiseccion' objects
     significant_figures = int(cmd_strings['significant_figures'])
     e = 0.0
     old_xi = 0.0
@@ -213,11 +202,17 @@ def main():
         f_xr = expr.subs(x, xr) # Calculate f(Xr)
 
         # Calculate Xi
+
+        xi = (xl + xr) / 2.0
+
+        #'''
+        # Calculate Xi
         if method == "biseccion":
             xi = (xl + xr) / 2.0
         elif method == "pfalsa":
             xi = ((xl)*(f_xr)-(xr)*(f_xl)) / ((f_xr)-(f_xl))
-
+        #'''
+        
         f_xi = expr.subs(x, xi) # Calculate f(Xi)
 
         # Calculate E
@@ -232,7 +227,7 @@ def main():
 
         # Append current iteration to list
         iterations_list.append(
-            Iteration(
+            IterationBiseccion(
                 iter=current_iteration,
                 xl=round(xl, significant_figures),
                 xr=round(xr, significant_figures),
@@ -261,10 +256,53 @@ def main():
 
         old_xi = xi
         current_iteration += 1
-    
-    #print_ascii_all_iterations(iterations_list)
 
-    print_table(iterations_list, significant_figures)
+    print_table_biseccion_and_pfalsa(iterations_list, significant_figures)
+
+
+    return 1
+
+def run_method_simple_punto_fijo(args, cmd_strings):
+
+    print("Debug: run_method_simple_punto_fijo")
+
+
+def run_method_newton_raphson(args, cmd_strings):
+
+    print("Debug: run_method_newton_raphson")
+
+##################################################
+
+def main():
+
+    # Load strings from JSON file
+
+    cmd_strings = load_cmd_strings()
+    args = initialize_arguments(cmd_strings)
+
+    #########################
+
+    # Print version if called or if there are no arguments and exit
+
+    if args.version:
+        print(cmd_strings['message_version'])
+        sys.exit(1)
+
+    #########################
+
+    # Pick method
+
+    method = str(from_args_get_method(args))
+
+    if method == "biseccion":
+        run_method_biseccion_and_pfalsa(args, cmd_strings, method)
+    elif method == "pfalsa":
+        run_method_biseccion_and_pfalsa(args, cmd_strings, method)
+    elif method == "psimple":
+        run_method_simple_punto_fijo(args, cmd_strings)
+    elif method == "newton":
+        run_method_newton_raphson(args, cmd_strings)
+
 
 if __name__ == "__main__":
     main()

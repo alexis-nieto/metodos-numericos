@@ -10,7 +10,7 @@
 
   "args_option_method_short": "-m",
   "args_option_method_long": "--metodo",
-  "args_option_method_info": "Seleccionar el método: 'biseccion' = Metodo de Biseccion, 'pfalsa'= Metodo de la Posicion Falsa",
+  "args_option_method_info": "Seleccionar el método: 'biseccion' = Metodo de Biseccion, 'pfalsa' = Metodo de la Posicion Falsa, 'psimple' = Metodo del Punto Fijo, 'newton' = Metodo de Newton-Raphson",
 
   "args_option_function_short": "-f",
   "args_option_function_long": "--funcion",
@@ -18,11 +18,15 @@
 
   "args_option_xl_short": "-xl",
   "args_option_xl_long": "--xl",
-  "args_option_xl_info": "Valor de Xl",
+  "args_option_xl_info": "Valor de Xl para el método de Biseccion y Posicion Falsa",
 
   "args_option_xr_short": "-xr",
   "args_option_xr_long": "--xr",
-  "args_option_xr_info": "Valor de Xr",
+  "args_option_xr_info": "Valor de Xr para el método de Biseccion y Posicion Falsa",
+
+  "args_option_xi_short": "-xi",
+  "args_option_xi_long": "--xi",
+  "args_option_xi_info": "Valor de Xi inicial para el método de Punto Fijo y Newton Raphson",
 
   "args_option_e_short": "-e",
   "args_option_e_long": "--e",
