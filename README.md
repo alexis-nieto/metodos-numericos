@@ -1,20 +1,42 @@
 
 # Dependencies
 
-To run the program, UV is needed:
+- mpmath==1.3.0: via sympy
 
-[Installation Process for Windows](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_2)
+- sympy==1.14.0
 
-[Installation Process for macOS and Linux](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1)
+- tabulate==0.9.0
 
-The commands must be run on the folder itself where the repo was cloned to.
+# Running
+
+This program needs to run with _**PIP**_.
+
+[Installation Process for Windows](https://phoenixnap.com/kb/install-pip-windows)
+
+Once installed, create and activate a virtual enviroment (to not fill your system with residual libraries).
+
+```bash
+
+# Create the VENV
+python -m venv venv
+
+# Activate the VENV on Windows:
+venv\Scripts\activate
+
+# Activate the VENV on Linux:
+source venv/bin/activate 
+
+# Install dependencies
+pip install -r requirements.txt
+
+```
 
 # Example of Biseccion
 
 Command:
 
 ```bash
-uv run main.py -m biseccion -f "1000000*(E**x)+(435000/x)*(E**x-1)-1564000" -xl 0.1 -xr 0.2 -e 0.005
+main.py -m biseccion -f "1000000*(E**x)+(435000/x)*(E**x-1)-1564000" -xl 0.1 -xr 0.2 -e 0.005
 ```
 
 Output:
@@ -49,7 +71,7 @@ Xi = 0.10099792
 Command:
 
 ```bash
-uv run main.py -m pfalsa -f "1000000*(E**x)+(435000/x)*(E**x-1)-1564000" -xl 0.1 -xr 0.2 -e 0.0005
+main.py -m pfalsa -f "1000000*(E**x)+(435000/x)*(E**x-1)-1564000" -xl 0.1 -xr 0.2 -e 0.0005
 ```
 
 Output:
@@ -73,7 +95,7 @@ Xi = 0.10099793
 Command:
 
 ```bash
-uv run main.py -m psimple -xi 2 -f "x*cos(x)" -e 0.0005
+main.py -m psimple -xi 2 -f "x*cos(x)" -e 0.0005
 ```
 
 Output:
@@ -114,7 +136,7 @@ Xi = 1.57079871
 Command:
 
 ```bash
-uv run main.py -m newton -xi 3 -f "x*sin(x)" -e 0.0005
+main.py -m newton -xi 3 -f "x*sin(x)" -e 0.0005
 ```
 
 Output:
@@ -137,7 +159,7 @@ Xi = 3.14159265
 # Example, all methods  with `f(x)=x*cos(x)`
 
 ```bash
-uv run main.py -m biseccion -xl 1 -xr 3 -f "x*cos(x)" -e 0.00005
+main.py -m biseccion -xl 1 -xr 3 -f "x*cos(x)" -e 0.00005
 
 |   Iter |         xl |      f(xl) |         xr |       f(xr) |         xi |       f(xi) |           e |
 |-------:|-----------:|-----------:|-----------:|------------:|-----------:|------------:|------------:|
@@ -171,7 +193,7 @@ Xi = 1.57079649
 
 #######################################################################################################
 
-uv run main.py -m pfalsa -xl 1 -xr 3 -f "x*cos(x)" -e 0.00005
+main.py -m pfalsa -xl 1 -xr 3 -f "x*cos(x)" -e 0.00005
 
 |   Iter |         xl |      f(xl) |         xr |       f(xr) |         xi |      f(xi) |           e |
 |-------:|-----------:|-----------:|-----------:|------------:|-----------:|-----------:|------------:|
@@ -195,7 +217,7 @@ Xi = 1.57079625
 
 #######################################################################################################
 
-uv run main.py -m psimple -xi 1 -f "x*cos(x)" -e 0.00005
+main.py -m psimple -xi 1 -f "x*cos(x)" -e 0.00005
 
 |   Iter |         xi |       g(x) |           e |
 |-------:|-----------:|-----------:|------------:|
@@ -230,7 +252,7 @@ Xi = 1.57079655
 
 #######################################################################################################
 
-uv run main.py -m newton -xi 1 -f "x*cos(x)" -e 0.00005
+main.py -m newton -xi 1 -f "x*cos(x)" -e 0.00005
 
 |   Iter |         xi |        f(x) |       f'(x) |           e |
 |-------:|-----------:|------------:|------------:|------------:|
@@ -248,3 +270,13 @@ Iterations: 6
 Xi = 1.57079633
 arkanvs-pop@therion:~/Desktop/metodos-numericos$ 
 ```
+
+# Development
+
+UV is needed for development:
+
+[Installation Process for Windows](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_2)
+
+[Installation Process for macOS and Linux](https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1)
+
+The commands must be run on the folder itself where the repo was cloned to.
