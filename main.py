@@ -171,7 +171,20 @@ def print_table_psimple(iterations, significant_figures):
     
     print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
 
-
+def print_table_newton_raphson(iterations, significant_figures):
+    from tabulate import tabulate
+    
+    data = [[
+        it.iter,
+        it.xi,
+        it.f_x,
+        it.fp_x,
+        it.e
+    ] for it in iterations]
+    
+    headers = ['Iter', 'xi', 'f(x)', 'f\'(x)', 'e']
+    
+    print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
 
 
 ''' @Deprecated
@@ -384,7 +397,113 @@ def run_method_simple_punto_fijo(args, cmd_strings):
 
 def run_method_newton_raphson(args, cmd_strings):
 
-    print("Debug: run_method_newton_raphson")
+    #print("Debug: run_method_newton_raphson")
+
+    function = ""
+    function_derivated = ""
+    target_e = 0.0
+    xi = 0.0
+    f_x = 0.0
+    fp_x = 0.0
+
+    # Get data from arguments
+    function = str(from_args_get_function(args))
+    target_e = float(from_args_get_e(args))
+    xi = float(from_args_get_xi(args))
+
+    #########################
+
+    # Sympy initialization
+
+    x = sp.symbols('x') # Create x symbol
+
+    # f(x)
+    f_x_expr = sp.sympify(function) # Parse the equation
+
+    # f'(x)
+    function_derivated = sp.diff(function, x) # Derivate function and create string
+    fp_x_expr = sp.sympify(function_derivated) # Parse the equation
+
+    #print("Debug: " + "Function: "+ str(function))
+    #print("Debug: " + "Function Derivated: "+ str(function_derivated))
+
+    #########################
+
+    current_iteration = 0
+    iterations_list = [] # To store the 'IterationBiseccion' objects
+    significant_figures = int(cmd_strings['significant_figures'])
+
+    # Iteration 0
+
+    f_x = f_x_expr.subs(x, xi) # Calculate f(X)
+    fp_x = fp_x_expr.subs(x, xi) # Calculate f'(X)
+    e = 0.0
+    old_xi = xi
+
+    #print("Debug: " + str(f_x))
+    #print("Debug: " + str(fp_x))
+
+    # Append iteration 0 to list
+    iterations_list.append(
+        IterationNewtonRaphson(
+            iter=current_iteration,
+            xi=round(xi, significant_figures),
+            f_x=round(f_x, significant_figures),
+            fp_x=round(fp_x, significant_figures),
+            e=round(e, significant_figures)
+        )
+    )
+
+    '''
+    for i in iterations_list:
+        print(i.iter)
+        print(i.xi)
+        print(i.f_x)
+        print(i.fp_x)
+        print(i.e)
+    #'''
+
+    current_iteration += 1
+
+    # Iterations >= 1
+
+    while True:
+
+        # Calculate new Xi
+        xi = old_xi - f_x/fp_x
+
+        f_x = f_x_expr.subs(x, xi) # Calculate f(Xi)
+        
+        fp_x = fp_x_expr.subs(x, xi) # Calculate f'(Xi)
+
+        # Calculate E
+        if current_iteration > 0:
+            e = abs( (xi - old_xi)*(100)/xi )
+
+        # Append current iteration to list
+        iterations_list.append(
+            IterationNewtonRaphson(
+                iter=current_iteration,
+                xi=round(xi, significant_figures),
+                f_x=round(f_x, significant_figures),
+                fp_x=round(fp_x, significant_figures),
+                e=round(e, significant_figures)
+            )
+        )
+
+        if current_iteration > 0:
+            if e <= target_e:
+                break
+
+        old_xi = xi
+        current_iteration += 1
+
+    print_table_newton_raphson(iterations_list, significant_figures)
+
+    print()
+    print("Function: x = " + function)
+    print("Iterations: " + str(current_iteration))
+    print("Xi = " + str(round(xi, 8)))
 
 ##################################################
 
