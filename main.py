@@ -511,6 +511,7 @@ def run_method_newton_raphson(args, cmd_strings):
     print()
     print("Method: " + method_name_string)
     print("Function: x = " + function)
+    print("Derivated Function: x = " + str(function_derivated))
     print("Iterations: " + str(current_iteration))
     print("Xi = " + str(round(xi, 8)))
 
