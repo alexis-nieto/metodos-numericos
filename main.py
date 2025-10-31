@@ -240,6 +240,7 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
     e = 0.0
     old_xi = 0.0
     f_xl_f_xi = 0.0
+    method_name_string = ""
 
     while True:
 
@@ -254,8 +255,10 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
         # Calculate Xi
         if method == "biseccion":
             xi = (xl + xr) / 2.0
+            method_name_string = str(cmd_strings['method_name_biseccion'])
         elif method == "pfalsa":
             xi = ((xl)*(f_xr)-(xr)*(f_xl)) / ((f_xr)-(f_xl))
+            method_name_string = str(cmd_strings['method_name_pfalsa'])
         #'''
         
         f_xi = expr.subs(x, xi) # Calculate f(Xi)
@@ -302,9 +305,10 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
         old_xi = xi
         current_iteration += 1
 
-    print_table_biseccion_and_pfalsa(iterations_list, significant_figures)
-
     print()
+    print_table_biseccion_and_pfalsa(iterations_list, significant_figures)
+    print()
+    print("Method: " + method_name_string)
     print("Function: x = " + function)
     print("Iterations: " + str(current_iteration))
     print("Xi = " + str(round(xi, 8)))
@@ -319,6 +323,7 @@ def run_method_simple_punto_fijo(args, cmd_strings):
     target_e = 0.0
     xi = 0.0
     g_x = 0.0
+    method_name_string = str(cmd_strings['method_name_psimple'])
 
     # Get data from arguments
     
@@ -388,9 +393,10 @@ def run_method_simple_punto_fijo(args, cmd_strings):
         old_xi = xi
         current_iteration += 1
 
-    print_table_psimple(iterations_list, significant_figures)
-
     print()
+    print_table_psimple(iterations_list, significant_figures)
+    print()
+    print("Method: " + method_name_string)
     print("Function: x = " + function)
     print("Iterations: " + str(current_iteration))
     print("Xi = " + str(round(xi, 8)))
@@ -405,6 +411,8 @@ def run_method_newton_raphson(args, cmd_strings):
     xi = 0.0
     f_x = 0.0
     fp_x = 0.0
+    method_name_string = str(cmd_strings['method_name_newton'])
+    #method_name_string = "Newton-Raphson"
 
     # Get data from arguments
     function = str(from_args_get_function(args))
@@ -498,9 +506,10 @@ def run_method_newton_raphson(args, cmd_strings):
         old_xi = xi
         current_iteration += 1
 
-    print_table_newton_raphson(iterations_list, significant_figures)
-
     print()
+    print_table_newton_raphson(iterations_list, significant_figures)
+    print()
+    print("Method: " + method_name_string)
     print("Function: x = " + function)
     print("Iterations: " + str(current_iteration))
     print("Xi = " + str(round(xi, 8)))

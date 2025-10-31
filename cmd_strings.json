@@ -4,6 +4,11 @@
 
   "message_version": "\nProgram Version: v1.0.0, \nAuthor: BSc. Arturo Nieto, \nLicense: GNU General Public License v3.0. \n\nThis program is distributed under the terms of the GNU GPL v3.0. \nYou can redistribute it and/or modify it under the terms of the license. \nFor more details, visit: https://www.gnu.org/licenses/gpl-3.0.html\n",
 
+  "method_name_biseccion": "Biseccion",
+  "method_name_pfalsa": "Posicion Falsa",
+  "method_name_psimple": "Simple de Punto Fijo",
+  "method_name_newton": "Newton-Raphson",
+
   "args_option_version_short": "-v",
   "args_option_version_long": "--version",
   "args_option_version_info": "Imprimir versión del programa é info",
