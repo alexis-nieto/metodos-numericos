@@ -13,7 +13,7 @@ This program needs to run with _**PIP**_.
 
 [Installation Process for Windows](https://phoenixnap.com/kb/install-pip-windows)
 
-Once installed, create and activate a virtual enviroment (to not fill your system with residual libraries).
+Once installed, create and activate a virtual enviroment (to not fill your system with residual junk libraries overtime).
 
 ```bash
 
