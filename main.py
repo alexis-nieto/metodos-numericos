@@ -41,71 +41,71 @@ class IterationNewtonRaphson:
 
 ##################################################
 
-def load_cmd_strings(filename='cmd_strings.json'):
+def load_strings_db(filename='strings_db.json'):
     with open(filename, 'r') as f:
         return json.load(f)
 
-def initialize_arguments(cmd_strings):
+def initialize_arguments(strings_db):
 
     # Load cmd strings and parse arguments
 
-    cmd_strings = load_cmd_strings()
+    strings_db = load_strings_db()
 
     parser = argparse.ArgumentParser(
-        description=cmd_strings['message_version']
+        description=strings_db['message_version']
     )
     
     # Define Arguments
 
     # Function (-v, --version)
     parser.add_argument(
-        cmd_strings['args_option_version_short'],
-        cmd_strings['args_option_version_long'],
+        strings_db['args_option_version_short'],
+        strings_db['args_option_version_long'],
         action='store_true',
-        help=cmd_strings['args_option_version_info']
+        help=strings_db['args_option_version_info']
     )
 
     # Method (-m, --method)
     parser.add_argument(
-        cmd_strings['args_option_method_short'],
-        cmd_strings['args_option_method_long'],
+        strings_db['args_option_method_short'],
+        strings_db['args_option_method_long'],
         choices=['biseccion', 'pfalsa', 'psimple', 'newton'],
-        help=textwrap.dedent(cmd_strings['args_option_method_info'])
+        help=textwrap.dedent(strings_db['args_option_method_info'])
     )
 
         # Function (-f, --function)
     parser.add_argument(
-        cmd_strings['args_option_function_short'],
-        cmd_strings['args_option_function_long'],
-        help=cmd_strings['args_option_function_info']
+        strings_db['args_option_function_short'],
+        strings_db['args_option_function_long'],
+        help=strings_db['args_option_function_info']
     )
 
         # Xl (-xl, --xl)
     parser.add_argument(
-        cmd_strings['args_option_xl_short'],
-        cmd_strings['args_option_xl_long'],
-        help=cmd_strings['args_option_xl_info']
+        strings_db['args_option_xl_short'],
+        strings_db['args_option_xl_long'],
+        help=strings_db['args_option_xl_info']
     )
 
         # Xr (-xr, --xr)
     parser.add_argument(
-        cmd_strings['args_option_xr_short'],
-        cmd_strings['args_option_xr_long'],
-        help=cmd_strings['args_option_xr_info']
+        strings_db['args_option_xr_short'],
+        strings_db['args_option_xr_long'],
+        help=strings_db['args_option_xr_info']
     )
 
         # Xi (-xi, --xi)
     parser.add_argument(
-        cmd_strings['args_option_xi_short'],
-        cmd_strings['args_option_xi_long'],
-        help=cmd_strings['args_option_xi_info']
+        strings_db['args_option_xi_short'],
+        strings_db['args_option_xi_long'],
+        help=strings_db['args_option_xi_info']
     )
 
         # E (-e, --error)
     parser.add_argument(
-        cmd_strings['args_option_e_short'],
-        cmd_strings['args_option_e_long'],
-        help=cmd_strings['args_option_e_info']
+        strings_db['args_option_e_short'],
+        strings_db['args_option_e_long'],
+        help=strings_db['args_option_e_info']
     )
 
     return parser.parse_args()
@@ -208,7 +208,7 @@ def print_ascii_all_iterations(iterations_list):
 
 ##################################################
 
-def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
+def run_method_biseccion_and_pfalsa(args, strings_db, method):
 
     function = ""
     target_e = 0.0
@@ -236,7 +236,7 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
 
     current_iteration = 0
     iterations_list = [] # To store the 'IterationBiseccion' objects
-    significant_figures = int(cmd_strings['significant_figures'])
+    significant_figures = int(strings_db['significant_figures'])
     e = 0.0
     old_xi = 0.0
     f_xl_f_xi = 0.0
@@ -255,10 +255,10 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
         # Calculate Xi
         if method == "biseccion":
             xi = (xl + xr) / 2.0
-            method_name_string = str(cmd_strings['method_name_biseccion'])
+            method_name_string = str(strings_db['method_name_biseccion'])
         elif method == "pfalsa":
             xi = ((xl)*(f_xr)-(xr)*(f_xl)) / ((f_xr)-(f_xl))
-            method_name_string = str(cmd_strings['method_name_pfalsa'])
+            method_name_string = str(strings_db['method_name_pfalsa'])
         #'''
         
         f_xi = expr.subs(x, xi) # Calculate f(Xi)
@@ -315,7 +315,7 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
 
     return 1
 
-def run_method_simple_punto_fijo(args, cmd_strings):
+def run_method_simple_punto_fijo(args, strings_db):
 
     #print("Debug: run_method_simple_punto_fijo")
 
@@ -323,7 +323,7 @@ def run_method_simple_punto_fijo(args, cmd_strings):
     target_e = 0.0
     xi = 0.0
     g_x = 0.0
-    method_name_string = str(cmd_strings['method_name_psimple'])
+    method_name_string = str(strings_db['method_name_psimple'])
 
     # Get data from arguments
     
@@ -343,7 +343,7 @@ def run_method_simple_punto_fijo(args, cmd_strings):
 
     current_iteration = 0
     iterations_list = [] # To store the 'IterationBiseccion' objects
-    significant_figures = int(cmd_strings['significant_figures'])
+    significant_figures = int(strings_db['significant_figures'])
 
     # Iteration 0
     g_x = expr.subs(x, xi) # Calculate g(X)
@@ -401,7 +401,7 @@ def run_method_simple_punto_fijo(args, cmd_strings):
     print("Iterations: " + str(current_iteration))
     print("Xi = " + str(round(xi, 8)))
 
-def run_method_newton_raphson(args, cmd_strings):
+def run_method_newton_raphson(args, strings_db):
 
     #print("Debug: run_method_newton_raphson")
 
@@ -411,7 +411,7 @@ def run_method_newton_raphson(args, cmd_strings):
     xi = 0.0
     f_x = 0.0
     fp_x = 0.0
-    method_name_string = str(cmd_strings['method_name_newton'])
+    method_name_string = str(strings_db['method_name_newton'])
     #method_name_string = "Newton-Raphson"
 
     # Get data from arguments
@@ -439,7 +439,7 @@ def run_method_newton_raphson(args, cmd_strings):
 
     current_iteration = 0
     iterations_list = [] # To store the 'IterationBiseccion' objects
-    significant_figures = int(cmd_strings['significant_figures'])
+    significant_figures = int(strings_db['significant_figures'])
 
     # Iteration 0
 
@@ -522,15 +522,15 @@ def main():
 
     # Load strings from JSON file
 
-    cmd_strings = load_cmd_strings()
-    args = initialize_arguments(cmd_strings)
+    strings_db = load_strings_db()
+    args = initialize_arguments(strings_db)
 
     #########################
 
     # Print version if called or if there are no arguments and exit
 
     if args.version:
-        print(cmd_strings['message_version'])
+        print(strings_db['message_version'])
         sys.exit(1)
 
     #########################
@@ -540,13 +540,13 @@ def main():
     method = str(from_args_get_method(args))
 
     if method == "biseccion":
-        run_method_biseccion_and_pfalsa(args, cmd_strings, method)
+        run_method_biseccion_and_pfalsa(args, strings_db, method)
     elif method == "pfalsa":
-        run_method_biseccion_and_pfalsa(args, cmd_strings, method)
+        run_method_biseccion_and_pfalsa(args, strings_db, method)
     elif method == "psimple":
-        run_method_simple_punto_fijo(args, cmd_strings)
+        run_method_simple_punto_fijo(args, strings_db)
     elif method == "newton":
-        run_method_newton_raphson(args, cmd_strings)
+        run_method_newton_raphson(args, strings_db)
 
 
 if __name__ == "__main__":
