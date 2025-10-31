@@ -11,7 +11,6 @@ import sympy as sp
 
 ##################################################
 
-
 class IterationBiseccion:
     def __init__(self, **kwargs):
         self.iter = kwargs.get('iter', 0)
@@ -21,6 +20,22 @@ class IterationBiseccion:
         self.f_xr = kwargs.get('f_xr', 0.0)
         self.xi = kwargs.get('xi', 0.0)
         self.f_xi = kwargs.get('f_xi', 0.0)
+        self.e = kwargs.get('e', 0.0)
+
+
+class IterationPuntoSimple:
+    def __init__(self, **kwargs):
+        self.iter = kwargs.get('iter', 0)
+        self.xi = kwargs.get('xi', 0.0)
+        self.g_x = kwargs.get('g_x', 0.0)
+        self.e = kwargs.get('e', 0.0)
+
+class IterationNewtonRaphson:
+    def __init__(self, **kwargs):
+        self.iter = kwargs.get('iter', 0)
+        self.xi = kwargs.get('xi', 0.0)
+        self.f_x = kwargs.get('f_x', 0.0)
+        self.fp_x = kwargs.get('fp_x', 0.0)
         self.e = kwargs.get('e', 0.0)
 
 
@@ -142,6 +157,23 @@ def print_table_biseccion_and_pfalsa(iterations, significant_figures):
     # Different table styles: 'grid', 'fancy_grid', 'pipe', 'orgtbl', 'github', 'pretty'
     print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
 
+def print_table_psimple(iterations, significant_figures):
+    from tabulate import tabulate
+    
+    data = [[
+        it.iter,
+        it.xi,
+        it.g_x,
+        it.e
+    ] for it in iterations]
+    
+    headers = ['Iter', 'xi', 'g(x)', 'e']
+    
+    print(tabulate(data, headers=headers, tablefmt='pipe', floatfmt='{}.{}f'.format('', significant_figures)))
+
+
+
+
 ''' @Deprecated
 def print_ascii_iteration(iterations_list, iter):
     print("\n")
@@ -259,19 +291,103 @@ def run_method_biseccion_and_pfalsa(args, cmd_strings, method):
 
     print_table_biseccion_and_pfalsa(iterations_list, significant_figures)
 
+    print()
+    print("Function: x = " + function)
+    print("Iterations: " + str(current_iteration))
+    print("Xi = " + str(round(xi, 8)))
 
     return 1
 
 def run_method_simple_punto_fijo(args, cmd_strings):
 
-    print("Debug: run_method_simple_punto_fijo")
+    #print("Debug: run_method_simple_punto_fijo")
 
+    function = ""
+    target_e = 0.0
+    xi = 0.0
+    g_x = 0.0
+
+    # Get data from arguments
+    
+    function = str(from_args_get_function(args))
+    target_e = float(from_args_get_e(args))
+    xi = float(from_args_get_xi(args))
+
+    function = function + " + x" # Add x to the function
+
+    #########################
+
+    # Sympy initialization
+    x = sp.symbols('x') # Create x symbol
+    expr = sp.sympify(function) # Parse the equation
+
+    #########################
+
+    current_iteration = 0
+    iterations_list = [] # To store the 'IterationBiseccion' objects
+    significant_figures = int(cmd_strings['significant_figures'])
+
+    # Iteration 0
+    g_x = expr.subs(x, xi) # Calculate g(X)
+    e = 0.0
+    old_xi = xi
+
+    # Append iteration 0 to list
+    iterations_list.append(
+        IterationPuntoSimple(
+            iter=current_iteration,
+            xi=round(xi, significant_figures),
+            g_x=round(g_x, significant_figures),
+            e=round(e, significant_figures)
+        )
+    )
+
+    current_iteration += 1
+
+    # Iterations >= 1
+
+    while True:
+
+        xi = g_x # Pass old g(X) to new Xi
+
+        g_x = expr.subs(x, xi) # Calculate g(X)
+        
+        f_xi = expr.subs(x, xi) # Calculate f(Xi)
+
+        # Calculate E
+        if current_iteration > 0:
+            e = abs( (xi - old_xi)*(100)/xi )
+
+        # Append current iteration to list
+        iterations_list.append(
+            IterationPuntoSimple(
+                iter=current_iteration,
+                xi=round(xi, significant_figures),
+                g_x=round(g_x, significant_figures),
+                e=round(e, significant_figures)
+            )
+        )
+
+        if current_iteration > 0:
+            if e <= target_e:
+                break
+
+        old_xi = xi
+        current_iteration += 1
+
+    print_table_psimple(iterations_list, significant_figures)
+
+    print()
+    print("Function: x = " + function)
+    print("Iterations: " + str(current_iteration))
+    print("Xi = " + str(round(xi, 8)))
 
 def run_method_newton_raphson(args, cmd_strings):
 
     print("Debug: run_method_newton_raphson")
 
 ##################################################
+
 
 def main():
 
